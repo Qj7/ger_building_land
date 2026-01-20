@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hausmeisterservice & Gebäudeservice – Gelsenkirchen & NRW</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <h1>[Firmenname]</h1>
+                    </div>
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="#home" class="nav-link">Start</a></li>
+                        <li><a href="#about" class="nav-link">Unser Konzept</a></li>
+                        <li><a href="#services" class="nav-link">Leistungen</a></li>
+                        <li><a href="#contact" class="nav-link">Kontakt</a></li>
+                    </ul>
+                    <div class="nav-actions">
+                        <a href="#contact" class="btn-primary">Kontakt</a>
+                    </div>
+                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Hausmeisterservice & Gebäudeservice – Gelsenkirchen & NRW</h2>
+                <p class="hero-subtitle">Willkommen bei [Firmenname], Ihrem kompetenten Partner für Hausmeisterservice, Gebäudereinigung und technische Dienstleistungen in Gelsenkirchen und ganz NRW.</p>
+                <p class="hero-description">Wir bieten einen strukturierten Komplettservice rund um Immobilien – von Reinigung, Instandhaltung und Rohrreinigung über Haushaltsauflösungen, Schimmelbeseitigung bis hin zu Schlüsseldienst, Wohnungsübergaben und technischen Arbeiten. Alles aus einer Hand, zuverlässig, fachgerecht und klar organisiert.</p>
+                <p class="hero-description" style="margin-top: 1rem; font-weight: 600; color: var(--accent-gold);">Besonderheit: Bei uns erhalten Sie alles aus einer Hand – keine Suche nach einzelnen Handwerkern. Wir koordinieren alle Arbeiten selbst, damit Sie sich entspannen können.</p>
+                <div class="hero-buttons">
+                    <a href="#services" class="btn-primary btn-large">Unsere Leistungen</a>
+                    <a href="#contact" class="btn-secondary btn-large">Kontakt aufnehmen</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>Nach unten scrollen</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Leistungen</h2>
+                <p class="section-subtitle">Alles aus einer Hand – zuverlässig, fachgerecht und klar organisiert</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                    </div>
+                    <h3>Hausmeisterservice</h3>
+                    <p>Technische Betreuung, Instandhaltung und Reparaturen – zuverlässig, professionell und mit Herz für jedes Detail.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M3 9h18M9 3v18"/>
+                        </svg>
+                    </div>
+                    <h3>Haushaltsauflösung</h3>
+                    <p>Von der Besichtigung bis zur besenreinen Übergabe – respektvoll, effizient und zuverlässig.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M2 12h20"/>
+                        </svg>
+                    </div>
+                    <h3>Gebäudereinigung</h3>
+                    <p>Saubere, gepflegte und hygienische Räume – Treppenhäuser, Fenster, Büros und Gemeinschaftsflächen.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 3l18 18M9 9l6 6"/>
+                        </svg>
+                    </div>
+                    <h3>Messiewohnungsreinigung</h3>
+                    <p>Diskret, hygienisch und respektvoll – Wiederherstellung bewohnbarer Räume mit Fingerspitzengefühl.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3>Schimmelbeseitigung</h3>
+                    <p>Fachliche Einschätzung, Analyse und professionelle Maßnahmen – maßgeschneiderte Lösungen zur dauerhaften Beseitigung.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                    </div>
+                    <h3>Rohrreinigung</h3>
+                    <p>Gründliche, professionelle Reinigung für Innen- und Außenbereiche – dauerhafte Funktionalität und Schutz Ihrer Immobilie.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="18" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </div>
+                    <h3>Schlüsseldienst</h3>
+                    <p>Türöffnungen und komplette Schlüssel- und Übergabeprozesse – schnell, sicher und stressfrei.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3>Gartenarbeiten</h3>
+                    <p>Rasenpflege, Heckenschnitt, Unkrautentfernung – Ihr Garten immer gepflegt, einladend und funktional.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2v20M2 12h20"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
+                    </div>
+                    <h3>Winterdienst</h3>
+                    <p>Schneeräumung und Streudienst – zuverlässig, vorschriftsgemäß und jederzeit einsatzbereit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Services Section -->
+    <section id="detailed-services" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Hausmeisterservice & Handwerkerleistungen</h2>
+            </div>
+
+            <div class="about-text" style="margin-bottom: 4rem;">
+                <p style="font-size: 1.1rem; color: var(--gray-600); margin-bottom: 2rem; line-height: 1.8;">
+                    Unser Hausmeisterservice ist mehr als nur ein Rundgang durch Ihre Immobilie. Wir kümmern uns um die technische Betreuung, Instandhaltung und Reparaturen – zuverlässig, professionell und mit Herz für jedes Detail.
+                </p>
+                <p style="font-size: 1.1rem; color: var(--gray-600); margin-bottom: 2rem; line-height: 1.8;">
+                    Unsere Kunden schätzen, dass sie einen Ansprechpartner für alle Belange haben, von kleinen Reparaturen bis zur Koordination von größeren Arbeiten. So sparen Sie Zeit, Aufwand und Kosten.
+                </p>
+                <h3 style="font-size: 1.3rem; color: var(--primary-gold); margin: 2rem 0 1rem; font-weight: 600;">Leistungen:</h3>
+                <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 2;">
+                    <li style="margin-bottom: 0.5rem;">• Regelmäßige Objektkontrollen</li>
+                    <li style="margin-bottom: 0.5rem;">• Betreuung von Gemeinschaftsflächen</li>
+                    <li style="margin-bottom: 0.5rem;">• Kleinere Instandhaltungsarbeiten</li>
+                    <li style="margin-bottom: 0.5rem;">• Koordination von Reparaturen</li>
+                    <li style="margin-bottom: 0.5rem;">• Ansprechpartner für Mieter und Eigentümer</li>
+                </ul>
+                <p style="font-size: 1rem; color: var(--accent-gold); margin-top: 2rem; font-weight: 600;">
+                    Ihre Vorteile: Wir verbinden technisches Know-how mit organisatorischer Effizienz – Ihr zuverlässiger Partner vor Ort.<br>
+                    24/7 Notdienst: Bei akuten Schäden oder Problemen jederzeit erreichbar.
+                </p>
+            </div>
+
+            <div class="about-cards">
+                <div class="about-card">
+                    <h3>Sanitärarbeiten & Installationen</h3>
+                    <p style="margin-bottom: 1rem;">Ihre Sanitäranlagen sollen immer reibungslos funktionieren, ohne dass Sie sich Sorgen machen müssen.</p>
+                    <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                        <li>• Austausch von Armaturen</li>
+                        <li>• Reparatur kleiner Leckagen</li>
+                        <li>• Instandsetzung von sanitären Anlagen</li>
+                        <li>• Austausch von Dichtungen, Siphons</li>
+                        <li>• Vorbereitung von Wohnungen nach Mieterwechsel</li>
+                    </ul>
+                    <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Alle Arbeiten werden sauber dokumentiert, damit Sie jederzeit den Überblick behalten.</p>
+                </div>
+
+                <div class="about-card">
+                    <h3>Elektroarbeiten & technische Prüfungen</h3>
+                    <p style="margin-bottom: 1rem;">Elektrische Sicherheit ist essenziell – besonders bei Wohnungsübergaben oder Renovierungen.</p>
+                    <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                        <li>• Kleinere Elektroinstallationen</li>
+                        <li>• Austausch von Steckdosen, Schaltern und Leuchten</li>
+                        <li>• Funktionsprüfungen elektrischer Anlagen</li>
+                        <li>• Sicht- und Sicherheitsprüfungen nach Renovierungen</li>
+                        <li>• Organisation gesetzlich notwendiger Elektro-Checks</li>
+                    </ul>
+                    <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Qualifizierte Elektriker prüfen jede Installation sorgfältig, damit Ihre Immobilie jederzeit sicher ist.<br>
+                    24/7 Notdienst: Sofortige Hilfe bei akuten Stromproblemen.</p>
+                </div>
+
+                <div class="about-card">
+                    <h3>Reparatur- & Instandsetzungsarbeiten</h3>
+                    <p style="margin-bottom: 1rem;">Kleine Schäden summieren sich schnell – wir kümmern uns darum, bevor sie zu größeren Problemen werden.</p>
+                    <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                        <li>• Kleinere Bau- und Reparaturarbeiten</li>
+                        <li>• Ausbesserungen an Wänden und Decken</li>
+                        <li>• Silikon- und Fugenarbeiten</li>
+                        <li>• Reparaturen an Türen, Fenstern und Beschlägen</li>
+                        <li>• Kleinere Fassadenarbeiten</li>
+                        <li>• Dachversiegelung und Dachanstrich</li>
+                        <li>• Installation von Dachrinnen-Laubschutz</li>
+                        <li>• Balkonsanierung und Abdichtung</li>
+                        <li>• Fenster- und Türenmontage sowie Reparatur</li>
+                    </ul>
+                    <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Wir liefern präzise, langlebige Lösungen für Ihre Immobilie.</p>
+                </div>
+
+                <div class="about-card">
+                    <h3>Koordination & Komplettservice</h3>
+                    <p style="margin-bottom: 1rem;">Unser Vorteil: alle Leistungen aus einer Hand. Wir übernehmen die Organisation, damit Sie keine Zeit mit Abstimmungen verschwenden.</p>
+                    <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                        <li>• Ein Ansprechpartner</li>
+                        <li>• Klare Abläufe</li>
+                        <li>• Weniger Abstimmungsaufwand</li>
+                        <li>• Zuverlässige Umsetzung</li>
+                    </ul>
+                    <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Alles aus einer Hand – effizient, stressfrei und professionell.</p>
+                </div>
+            </div>
+
+            <div class="about-text" style="margin-top: 4rem;">
+                <div class="about-cards">
+                    <div class="about-card">
+                        <h3>Haushaltsauflösung</h3>
+                        <p style="margin-bottom: 1rem;">Eine Haushaltsauflösung erfordert Organisation, Diskretion und Erfahrung. Wir begleiten Sie von der Besichtigung bis zur besenreinen Übergabe.</p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Komplette Wohnungs- und Hausauflösungen</li>
+                            <li>• Räumung von Kellern, Dachböden und Garagen</li>
+                            <li>• Sortieren und Trennen von Inventar</li>
+                            <li>• Fachgerechte Entsorgung</li>
+                            <li>• Besenreine Übergabe</li>
+                            <li>• Müllentsorgung nach Abfallkalender</li>
+                            <li>• Entfernen von Tapeten und Bodenbelägen</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Wir arbeiten respektvoll, effizient und zuverlässig, auch bei sensiblen Situationen.<br>
+                        24/7 Notdienst: Kurzfristige Räumungen jederzeit möglich.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>Gebäudereinigung</h3>
+                        <p style="margin-bottom: 1rem;">Saubere Gebäude sind das Aushängeschild jeder Immobilie. Wir sorgen für saubere, gepflegte und hygienische Räume, in denen sich Mieter, Eigentümer und Besucher wohlfühlen.</p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Treppenhausreinigung</li>
+                            <li>• Reinigung von Fenstern und Glasflächen (Innen- und Außenbereich)</li>
+                            <li>• Büro- und Praxisreinigung</li>
+                            <li>• Reinigung von Gemeinschaftsflächen</li>
+                            <li>• Reinigung von Müllcontainer</li>
+                            <li>• Regelmäßige oder einmalige Reinigungen</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Präzises Arbeiten und erfahrenes Team garantieren glänzende Ergebnisse.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>Messiewohnungsreinigung</h3>
+                        <p style="margin-bottom: 1rem;">Messiewohnungen erfordern besonderes Fingerspitzengefühl und Erfahrung. Wir arbeiten diskret, hygienisch und respektvoll, um die Wohnräume wieder bewohnbar zu machen.</p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Strukturierte Entrümpelung stark verschmutzter Wohnungen</li>
+                            <li>• Entfernung von Müll und hygienischen Belastungen</li>
+                            <li>• Intensive Grund- und Spezialreinigung</li>
+                            <li>• Wiederherstellung bewohnbarer Räume</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Diskretion und Empathie sind unsere Leitprinzipien in sensiblen Fällen.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>Schimmelbeseitigung & Fachberatung</h3>
+                        <p style="margin-bottom: 1rem;">Schimmelbefall in Wohnräumen ist ein ernstzunehmendes Problem, das fachlich korrekt eingeschätzt werden muss. Falsche Reinigung kann den Schaden verschlimmern.</p>
+                        <p style="margin-bottom: 1rem;"><strong>Besonderheit unseres Angebots:</strong><br>
+                        In unserem Team arbeitet eine fachkundige Person, die berechtigt ist, den Schimmelbefall zu beurteilen und eine konkrete Vorgehensweise zur Entfernung und Vorbeugung zu erstellen.</p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Fachliche Einschätzung des Schimmelbefalls</li>
+                            <li>• Bewertung der Belastung und Gefährdung</li>
+                            <li>• Erstellung eines Maßnahmenplans</li>
+                            <li>• Professionelle Reinigung</li>
+                            <li>• Empfehlungen zur Prävention</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Unsere Expertin erstellt maßgeschneiderte Maßnahmenpläne, um Schimmel effektiv zu beseitigen.<br>
+                        24/7 Notdienst: Sofortige Reaktion bei akuten Fällen.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>Rohrreinigung & Dachentwässerung</h3>
+                        <p style="margin-bottom: 1rem;">Verstopfte Rohre und Abflüsse können schnell zu ernsthaften Schäden an Gebäuden führen. Eine fachgerechte Rohrreinigung ist daher entscheidend, um Wasserschäden, Rückstau und Feuchtigkeitsprobleme zu vermeiden.</p>
+                        <p style="margin-bottom: 1rem;">Wir bieten eine gründliche, professionelle und nachhaltige Rohrreinigung – für Innen- und Außenbereiche von Wohn- und Gewerbeimmobilien. Zusätzlich übernehmen wir die Reinigung von Regenfallrohren und Entwässerungsleitungen, die vom Dach nach unten führen.</p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Reinigung von Abflüssen in Küche, Bad und WC</li>
+                            <li>• Beseitigung hartnäckiger Verstopfungen</li>
+                            <li>• Ursachenanalyse statt kurzfristiger Lösungen</li>
+                            <li>• Reinigung von Regenfallrohren und Dachentwässerung</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Wir sorgen für dauerhafte Funktionalität und Schutz Ihrer Immobilie.<br>
+                        24/7 Notdienst: Rohrbruch oder akute Verstopfung? Wir reagieren sofort.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>Schlüsseldienst & Wohnungsübergabe</h3>
+                        <p style="margin-bottom: 1rem;"><strong>Schlüsseldienst – mehr als nur Türöffnungen</strong></p>
+                        <p style="margin-bottom: 1rem;">Unser Schlüsseldienst versteht sich nicht nur als schnelle Hilfe bei zugefallenen Türen, sondern als zuverlässiger Service rund um Schlüssel, Zugang und Wohnungsorganisation.</p>
+                        <p style="margin-bottom: 1rem;"><strong>Klassischer Schlüsseldienst:</strong></p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Türöffnungen bei zugefallenen oder verschlossenen Türen</li>
+                            <li>• Möglichst beschädigungsfreie Öffnung</li>
+                            <li>• Schnelle Reaktionszeiten</li>
+                            <li>• Faire und transparente Preise</li>
+                        </ul>
+                        <p style="margin-bottom: 1rem;"><strong>Schlüsselmanagement und komplette Wohnungsübergaben:</strong></p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Abnahme der Wohnung nach Auszug des Mieters</li>
+                            <li>• Sichtprüfung des Zustands der Wohnung</li>
+                            <li>• Organisation und Durchführung notwendiger Reinigungsarbeiten</li>
+                            <li>• Kleinere Instandsetzungs- und Reparaturarbeiten</li>
+                            <li>• Koordination weiterer Gewerke bei Bedarf</li>
+                            <li>• Schlüsselverwaltung und Schlüsselübergabe</li>
+                            <li>• Übergabe der Wohnung an den neuen Mieter</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Schnell, sicher und stressfrei – wir garantieren eine reibungslose Übergabe.<br>
+                        24/7 Notdienst: Auch nachts und am Wochenende verfügbar.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>Umzugsservice</h3>
+                        <p style="margin-bottom: 1rem;">Ein Umzug muss nicht stressig sein. Wir unterstützen Sie zuverlässig bei privaten und gewerblichen Umzügen – sorgfältig, termingerecht und effizient.</p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Planung und Organisation des Umzugs</li>
+                            <li>• Transport von Möbeln und Haushaltsgegenständen</li>
+                            <li>• Be- und Entladen inkl. Tragearbeiten</li>
+                            <li>• Sicherung und Schutz des Umzugsguts</li>
+                            <li>• Unterstützung bei Wohnungsübergaben (auf Wunsch)</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile:<br>
+                        Erfahrenes Team sorgt für einen reibungslosen und sicheren Umzug – alles aus einer Hand.<br>
+                        Flexibler Service: Auch kurzfristige Termine möglich.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>Möbelmontage</h3>
+                        <p style="margin-bottom: 1rem;">Ob Neuanschaffung oder Umzug – wir übernehmen die fachgerechte Montage Ihrer Möbel schnell und zuverlässig.</p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Montage und Demontage von Möbeln aller Art</li>
+                            <li>• Aufbau von Küchen-, Büro- und Wohnmöbeln</li>
+                            <li>• Wandmontage (Regale, Schränke, TV-Halterungen)</li>
+                            <li>• Kleine Anpassungen und Nachjustierungen</li>
+                            <li>• Entsorgung von Verpackungsmaterial (auf Wunsch)</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile:<br>
+                        Präzise und saubere Montage durch erfahrene Monteure – stabil, sicher und langlebig.<br>
+                        Zeitersparnis: Sie genießen Ihre Möbel, wir erledigen den Aufbau.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>Gartenarbeiten</h3>
+                        <p style="margin-bottom: 1rem;">Ein gepflegter Garten verbessert sofort das Erscheinungsbild Ihrer Immobilie.</p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Rasenpflege</li>
+                            <li>• Heckenschnitt & Strauchschnitt</li>
+                            <li>• Unkrautentfernung</li>
+                            <li>• Aufräum- und Pflegearbeiten</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Wir sorgen dafür, dass Ihr Garten immer gepflegt, einladend und funktional ist.</p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>Winterdienst</h3>
+                        <p style="margin-bottom: 1rem;">Wir sorgen für sichere Wege und Verkehrssicherheit während der kalten Jahreszeit.</p>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem;">
+                            <li>• Schneeräumung</li>
+                            <li>• Streudienst</li>
+                            <li>• Regelmäßige Kontrollen bei Glätte</li>
+                        </ul>
+                        <p style="color: var(--accent-gold); font-weight: 600;">Ihre Vorteile: Zuverlässig, vorschriftsgemäß und jederzeit einsatzbereit – auch bei extremen Wetterlagen.<br>
+                        24/7 Notdienst: Sofortige Unterstützung bei Glätte oder Schneechaos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">Unser Konzept – strukturiert, professionell, zuverlässig</h2>
+                    <p style="font-size: 1.1rem; color: var(--gray-600); margin-bottom: 2rem; line-height: 1.8;">
+                        Wir arbeiten nach einem klaren Konzept: Planung – Durchführung – Kontrolle – Übergabe.
+                    </p>
+                    <p style="font-size: 1.1rem; color: var(--gray-600); margin-bottom: 2rem; line-height: 1.8;">
+                        Jede Immobilie, jeder Auftrag und jede Situation wird individuell betrachtet. Durch strukturierte Abläufe, qualifiziertes Fachpersonal und klare Kommunikation stellen wir sicher, dass Arbeiten effizient, sauber und termingerecht ausgeführt werden.
+                    </p>
+                    <p style="font-size: 1.1rem; color: var(--gray-600); margin-bottom: 3rem; line-height: 1.8;">
+                        Wir möchten, dass unsere Kunden zu jeder Zeit wissen, dass ihre Immobilie in sicheren Händen ist. Vertrauen, Professionalität und Kommunikation stehen bei uns an erster Stelle.
+                    </p>
+                    <h3 style="font-size: 1.5rem; color: var(--primary-gold); margin-bottom: 1.5rem; font-weight: 600;">Unser Service richtet sich an:</h3>
+                    <div class="about-cards">
+                        <div class="about-card">
+                            <h3>Vermieter</h3>
+                            <p>Komplettservice für Ihre Immobilien – von der Verwaltung bis zur Übergabe.</p>
+                        </div>
+                        <div class="about-card">
+                            <h3>Hausverwaltungen</h3>
+                            <p>Zuverlässige Partner für alle technischen und organisatorischen Aufgaben.</p>
+                        </div>
+                        <div class="about-card">
+                            <h3>Eigentümer</h3>
+                            <p>Professionelle Betreuung Ihrer Immobilie aus einer Hand.</p>
+                        </div>
+                        <div class="about-card">
+                            <h3>Gewerbe- & Privatkunden</h3>
+                            <p>Individuelle Lösungen für jeden Bedarf – diskret und zuverlässig.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section id="why-us" class="blog">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Warum [Firmenname]?</h2>
+                <p class="section-subtitle">Ihr zuverlässiger Partner für alle Immobiliendienstleistungen</p>
+            </div>
+            <div class="about-cards" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); max-width: 1000px; margin: 0 auto;">
+                <div class="about-card">
+                    <h3>Komplettservice aus einer Hand</h3>
+                    <p>Keine Suche nach einzelnen Handwerkern – wir koordinieren alle Arbeiten selbst, damit Sie sich entspannen können.</p>
+                </div>
+                <div class="about-card">
+                    <h3>Strukturierte Abläufe & Premium-Qualität</h3>
+                    <p>Planung – Durchführung – Kontrolle – Übergabe. Jeder Auftrag wird individuell betrachtet und professionell umgesetzt.</p>
+                </div>
+                <div class="about-card">
+                    <h3>Qualifiziertes Fachpersonal</h3>
+                    <p>Erfahrenes Team mit technischem Know-how und organisatorischer Effizienz für jeden Bereich.</p>
+                </div>
+                <div class="about-card">
+                    <h3>Zuverlässigkeit & Diskretion</h3>
+                    <p>Ihre Immobilie ist in sicheren Händen. Vertrauen, Professionalität und Kommunikation stehen bei uns an erster Stelle.</p>
+                </div>
+                <div class="about-card">
+                    <h3>24/7 Notdienst</h3>
+                    <p>Für alle akuten Situationen jederzeit erreichbar – auch nachts und am Wochenende.</p>
+                </div>
+                <div class="about-card">
+                    <h3>Einsatzgebiet: Gelsenkirchen & ganz NRW</h3>
+                    <p>Wir sind für Sie da, wo Sie uns brauchen – in Gelsenkirchen und ganz Nordrhein-Westfalen.</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--gray-200); border-radius: 16px; max-width: 900px; margin-left: auto; margin-right: auto;">
+                <p style="font-size: 1.1rem; color: var(--gray-600); line-height: 1.8;">
+                    Wir handeln entschlossen, verantwortungsbewusst und mit höchstem Anspruch, um Ihre Immobilie jederzeit sicher, sauber und funktional zu halten.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Kontakt</h2>
+                <p class="section-subtitle">Sie suchen einen zuverlässigen Hausmeisterservice oder Gebäudedienstleister in Gelsenkirchen oder NRW? Kontaktieren Sie uns gerne für eine unverbindliche Beratung.</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+                        <h3>Unser Büro:</h3>
+                        <p>[Firmenname]</p>
+                        <p>Nordring 9</p>
+                        <p>45894 Gelsenkirchen</p>
+                        <p>Nordrhein-Westfalen, Deutschland</p>
+                    </div>
+                    <div class="contact-actions">
+                        <a href="tel:" class="contact-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            <span>Telefon</span>
+                        </a>
+                        <a href="mailto:" class="contact-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <span>E-Mail</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-form-wrapper">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-Mail</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telefon</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Nachricht</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary btn-large">Senden</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>[Firmenname]</h3>
+                    <p>Hausmeisterservice & Gebäudeservice – Gelsenkirchen & NRW</p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">Nordring 9, 45894 Gelsenkirchen</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Leistungen</h4>
+                    <ul>
+                        <li><a href="#services">Hausmeisterservice</a></li>
+                        <li><a href="#services">Gebäudereinigung</a></li>
+                        <li><a href="#services">Haushaltsauflösung</a></li>
+                        <li><a href="#services">Schimmelbeseitigung</a></li>
+                        <li><a href="#services">Rohrreinigung</a></li>
+                        <li><a href="#services">Schlüsseldienst</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Information</h4>
+                    <ul>
+                        <li><a href="#about">Unser Konzept</a></li>
+                        <li><a href="#why-us">Warum wir?</a></li>
+                        <li><a href="#contact">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Rechtliches</h4>
+                    <ul>
+                        <li><a href="#">Datenschutzerklärung</a></li>
+                        <li><a href="#">Impressum</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 [Firmenname]. Alle Rechte vorbehalten.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
