@@ -1,0 +1,5 @@
+# Local MSP/MCP sources (keep out of git/deploy)
+msp_source/
+
+# Local dev artifacts
+.server.pid
