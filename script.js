@@ -20,38 +20,27 @@ if (menuToggle && navMenu) {
 
 // Header scroll effect
 const header = document.querySelector('.header');
-let lastScroll = 0;
+const hero = document.querySelector('.hero');
 
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
+// Smooth scroll for anchor links (with fixed header offset)
+document.addEventListener('click', (e) => {
+    const anchor = e.target.closest('a[href^="#"]');
+    if (!anchor) return;
 
-    if (currentScroll > 100) {
-        header.classList.add('scrolled');
-    } else {
-        header.classList.remove('scrolled');
-    }
+    const href = anchor.getAttribute('href');
+    if (!href || href === '#') return;
 
-    lastScroll = currentScroll;
-});
+    const target = document.querySelector(href);
+    if (!target) return;
 
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        if (href === '#') return;
+    e.preventDefault();
 
-        e.preventDefault();
-        const target = document.querySelector(href);
+    const headerHeight = header?.offsetHeight ?? 0;
+    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
-        if (target) {
-            const headerHeight = header.offsetHeight;
-            const targetPosition = target.offsetTop - headerHeight;
-
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
+    window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
     });
 });
 
@@ -128,9 +117,34 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
+function initFooterServicesLinks() {
+    const footerList = document.getElementById('footerServicesList');
+    const sourceLinks = document.querySelectorAll('.services-list a.services-list-link');
+
+    if (!footerList || sourceLinks.length === 0) return;
+
+    footerList.innerHTML = '';
+    sourceLinks.forEach(source => {
+        const titleEl = source.querySelector('.services-list-title');
+        const label = (titleEl?.textContent || '').trim();
+        if (!label) return;
+
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = source.getAttribute('href') || '#services';
+        a.textContent = label;
+        li.appendChild(a);
+        footerList.appendChild(li);
+    });
+}
+
 // Observe elements for animation
 document.addEventListener('DOMContentLoaded', () => {
-    const animateElements = document.querySelectorAll('.service-card, .blog-card, .about-card');
+    initFooterServicesLinks();
+
+    const animateElements = document.querySelectorAll(
+        '.services-list-item, .about-bridge, .process-step, .service-block, .about-card, .contact-card, .contact-form-wrapper, .callout'
+    );
     animateElements.forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
@@ -139,24 +153,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Add hover effect for service cards
-const serviceCards = document.querySelectorAll('.service-card');
-serviceCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-8px)';
-    });
-
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-
 // Active nav link highlighting
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-link');
 
-function highlightActiveSection() {
-    const scrollY = window.pageYOffset;
+function highlightActiveSection(scrollY) {
+    if (!sections.length || !navLinks.length) return;
 
     sections.forEach(section => {
         const sectionHeight = section.offsetHeight;
@@ -174,19 +176,28 @@ function highlightActiveSection() {
     });
 }
 
-window.addEventListener('scroll', highlightActiveSection);
+function setHeaderScrolled(scrollY) {
+    if (!header) return;
+    if (scrollY > 100) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+}
 
-// Add active class styling to CSS via JavaScript (for dynamic highlighting)
-const style = document.createElement('style');
-style.textContent = `
-    .nav-link.active {
-        color: var(--primary-gold) !important;
+function applyHeroParallax(scrollY) {
+    if (!hero) return;
+    if (scrollY < window.innerHeight) {
+        hero.style.transform = `translateY(${scrollY * 0.5}px)`;
     }
-    .nav-link.active::after {
-        width: 100% !important;
-    }
-`;
-document.head.appendChild(style);
+}
+
+function onScroll() {
+    const scrollY = window.pageYOffset;
+    setHeaderScrolled(scrollY);
+    highlightActiveSection(scrollY);
+    applyHeroParallax(scrollY);
+}
+
+window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('load', onScroll);
 
 // Lazy loading for images (if you add real images later)
 if ('loading' in HTMLImageElement.prototype) {
@@ -200,15 +211,6 @@ if ('loading' in HTMLImageElement.prototype) {
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
     document.body.appendChild(script);
 }
-
-// Add parallax effect to hero section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    if (hero && scrolled < window.innerHeight) {
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-    }
-});
 
 console.log('[Firmenname] - Hausmeisterservice & Gebäudeservice - Website erfolgreich geladen!');
 

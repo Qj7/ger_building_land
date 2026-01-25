@@ -1,19 +1,5 @@
-# OS files
-.DS_Store
-Thumbs.db
-desktop.ini
+# Local MSP/MCP sources (keep out of git/deploy)
+msp_source/
 
-# Editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Logs
-*.log
-npm-debug.log*
-
-# Temporary files
-*.tmp
-*.temp
+# Local dev artifacts
+.server.pid
