@@ -44,27 +44,74 @@ document.addEventListener('click', (e) => {
     });
 });
 
-// Contact Form Handler
+// Contact Form — speichert Anfragen in Supabase oder localStorage
+const STORAGE_REQUESTS = 'admin_requests';
 const contactForm = document.getElementById('contactForm');
 
+function getUrlParams() {
+    const s = (window.location.search || '').slice(1);
+    const out = {};
+    s.split('&').forEach(pair => {
+        const [k, v] = pair.split('=').map(decodeURIComponent);
+        if (k && v != null) out[k] = v;
+    });
+    return out;
+}
+
+function getSupabase() {
+    return window.supabase || null;
+}
+
 if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Get form data
         const formData = new FormData(contactForm);
+        const params = getUrlParams();
         const data = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            message: formData.get('message')
+            name: (formData.get('name') || '').trim(),
+            email: (formData.get('email') || '').trim(),
+            phone: (formData.get('phone') || '').trim(),
+            message: (formData.get('message') || '').trim(),
+            date: params.date || null,
+            slots: params.slots ? params.slots.split(',') : null
         };
 
-        // Here you would typically send the data to a server
-        // For now, we'll just show a success message
-        showFormMessage('Vielen Dank! Ihre Nachricht wurde gesendet. Wir werden uns in Kürze bei Ihnen melden.', 'success');
+        const sb = getSupabase();
+        if (sb) {
+            try {
+                await sb.from('requests').insert({
+                    type: 'contact',
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone,
+                    message: data.message,
+                    date: data.date,
+                    slots: data.slots
+                });
+            } catch (_) {}
+        } else {
+            try {
+                const raw = localStorage.getItem(STORAGE_REQUESTS);
+                const list = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(list)) list = [];
+                list.push({
+                    id: 'req-' + Date.now(),
+                    type: 'contact',
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone,
+                    message: data.message,
+                    date: data.date,
+                    slots: data.slots,
+                    createdAt: new Date().toISOString(),
+                    processed: false
+                });
+                localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(list));
+            } catch (_) {}
+        }
 
-        // Reset form
+        showFormMessage('Vielen Dank! Ihre Nachricht wurde gesendet. Wir werden uns in Kürze bei Ihnen melden.', 'success');
         contactForm.reset();
     });
 }
@@ -212,5 +259,131 @@ if ('loading' in HTMLImageElement.prototype) {
     document.body.appendChild(script);
 }
 
-console.log('[Firmenname] - Hausmeisterservice & Gebäudeservice - Website erfolgreich geladen!');
+// Cookie-Einwilligung (DSGVO / TMG § 15 / BDSG konform)
+const COOKIE_CONSENT_KEY = 'cookie_consent_v1';
+
+function getCookieConsent() {
+    try {
+        const raw = localStorage.getItem(COOKIE_CONSENT_KEY);
+        if (!raw) return null;
+        const data = JSON.parse(raw);
+        if (data && typeof data.necessary === 'boolean') {
+            return {
+                necessary: true,
+                statistics: !!data.statistics,
+                marketing: !!data.marketing,
+                timestamp: data.timestamp || null
+            };
+        }
+    } catch (_) {}
+    return null;
+}
+
+function setCookieConsent(consent) {
+    const payload = {
+        necessary: true,
+        statistics: !!consent.statistics,
+        marketing: !!consent.marketing,
+        timestamp: new Date().toISOString()
+    };
+    localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(payload));
+    if (typeof window.onCookieConsentUpdate === 'function') {
+        window.onCookieConsentUpdate(payload);
+    }
+}
+
+function showCookieBanner(show) {
+    const banner = document.getElementById('cookieBanner');
+    if (!banner) return;
+    if (show) {
+        banner.removeAttribute('hidden');
+    } else {
+        banner.setAttribute('hidden', '');
+    }
+}
+
+function showCookieModal(show) {
+    const modal = document.getElementById('cookieSettingsModal');
+    if (!modal) return;
+    if (show) {
+        modal.removeAttribute('hidden');
+        const stats = document.getElementById('cookieStatistics');
+        const marketing = document.getElementById('cookieMarketing');
+        const consent = getCookieConsent();
+        if (stats) stats.checked = consent ? consent.statistics : false;
+        if (marketing) marketing.checked = consent ? consent.marketing : false;
+    } else {
+        modal.setAttribute('hidden', '');
+    }
+}
+
+function saveCookieSettingsFromModal() {
+    const stats = document.getElementById('cookieStatistics');
+    const marketing = document.getElementById('cookieMarketing');
+    setCookieConsent({
+        necessary: true,
+        statistics: stats ? stats.checked : false,
+        marketing: marketing ? marketing.checked : false
+    });
+    showCookieBanner(false);
+    showCookieModal(false);
+}
+
+function initCookieConsent() {
+    const consent = getCookieConsent();
+    const banner = document.getElementById('cookieBanner');
+    if (!consent && banner) {
+        showCookieBanner(true);
+    }
+
+    const openSettings = () => {
+        showCookieModal(true);
+    };
+
+    const closeModal = () => {
+        showCookieModal(false);
+    };
+
+    document.getElementById('cookieAcceptAll')?.addEventListener('click', () => {
+        setCookieConsent({ necessary: true, statistics: true, marketing: true });
+        showCookieBanner(false);
+    });
+
+    document.getElementById('cookieAcceptNecessary')?.addEventListener('click', () => {
+        setCookieConsent({ necessary: true, statistics: false, marketing: false });
+        showCookieBanner(false);
+    });
+
+    document.getElementById('cookieOpenSettings')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        openSettings();
+    });
+
+    document.getElementById('cookieBannerOpenSettings')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        openSettings();
+    });
+
+    document.getElementById('openCookieSettings')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        openSettings();
+    });
+
+    document.getElementById('cookieSaveSettings')?.addEventListener('click', () => {
+        saveCookieSettingsFromModal();
+    });
+
+    document.getElementById('cookieAcceptAllModal')?.addEventListener('click', () => {
+        setCookieConsent({ necessary: true, statistics: true, marketing: true });
+        showCookieBanner(false);
+        showCookieModal(false);
+    });
+
+    document.getElementById('cookieModalClose')?.addEventListener('click', closeModal);
+    document.getElementById('cookieModalBackdrop')?.addEventListener('click', closeModal);
+}
+
+document.addEventListener('DOMContentLoaded', initCookieConsent);
+
+console.log('IC Immobilien Service GmbH - Hausmeisterservice & Gebäudeservice - Website erfolgreich geladen!');
 
