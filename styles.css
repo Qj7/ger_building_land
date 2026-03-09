@@ -209,6 +209,63 @@ body {
     font-size: 1.1rem;
 }
 
+/* CTA-кнопка «Kontakt aufnehmen» — акцент в стиле сайта */
+.btn-contact-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1rem 2.25rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-50);
+    background: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-gold-dark) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-contact-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.btn-contact-cta:hover {
+    color: var(--gray-50);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(212, 175, 55, 0.4);
+    border-color: var(--primary-gold-light);
+}
+
+.btn-contact-cta:hover::before {
+    opacity: 1;
+}
+
+.btn-contact-cta:focus-visible {
+    outline: 2px solid var(--primary-gold-light);
+    outline-offset: 3px;
+}
+
+.btn-contact-cta .btn-contact-cta-icon {
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+    stroke: currentColor;
+}
+
+.btn-contact-cta.btn-large {
+    padding: 1.1rem 2.5rem;
+    font-size: 1.15rem;
+}
+
 /* Hero Section */
 .hero {
     position: relative;
@@ -329,6 +386,142 @@ section {
     color: var(--primary-gold);
     margin: 2rem 0 1rem;
     font-weight: 600;
+}
+
+/* Legal pages (Impressum, etc.) */
+.legal-page {
+    padding: 7rem 0 5rem;
+    background: linear-gradient(160deg, var(--gray-50) 0%, var(--gray-100) 45%, var(--gray-50) 100%);
+    min-height: 100vh;
+}
+
+.legal-content {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--gray-100);
+    padding: 2.5rem 2.5rem 3rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(212, 175, 55, 0.08);
+    position: relative;
+}
+
+.legal-content::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 20px 0 0 20px;
+    background: linear-gradient(180deg, var(--primary-gold), var(--primary-gold-dark));
+    opacity: 0.9;
+}
+
+.legal-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+    font-size: 0.95rem;
+    color: var(--gray-500);
+}
+
+.legal-breadcrumb a {
+    color: var(--gray-600);
+    text-decoration: none;
+    transition: color 0.25s ease;
+}
+
+.legal-breadcrumb a:hover {
+    color: var(--primary-gold);
+}
+
+.legal-breadcrumb span {
+    color: var(--gray-400);
+}
+
+.legal-content .section-title {
+    text-align: left;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.25);
+}
+
+.legal-content p {
+    font-size: 1.05rem;
+    color: var(--gray-600);
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+}
+
+.legal-content p strong {
+    color: var(--gray-800);
+}
+
+.legal-content a:not(.btn-contact-cta) {
+    color: var(--primary-gold);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.legal-content a:not(.btn-contact-cta):hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+.legal-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-gold);
+    margin: 2.5rem 0 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.legal-subheading {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin: 1.5rem 0 0.75rem;
+}
+
+/* Блок «Unser Büro» с кнопкой на странице Impressum */
+.legal-office-card {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: var(--gray-200);
+    border-radius: 16px;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.legal-office-card .legal-heading {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.legal-office-card p {
+    margin-bottom: 1rem;
+}
+
+.legal-office-card .btn-contact-cta {
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .legal-content {
+        padding: 1.75rem 1.5rem 2.5rem;
+        padding-left: 1.75rem;
+    }
+
+    .legal-content::before {
+        width: 3px;
+    }
+
+    .legal-office-card {
+        padding: 1.5rem;
+    }
 }
 
 .list-clean {
@@ -595,10 +788,43 @@ section {
     border-color: transparent;
 }
 
-/* Кнопка-ссылка "Termin vereinbaren" (отдельный класс, макс 330px) */
+/* Кнопка-ссылка "Termin vereinbaren" — декорированный блок с направлением */
 .services-term-wrap {
     max-width: 900px;
-    margin: 1.25rem auto 0;
+    margin: 1.75rem auto 0;
+    padding: 1.25rem 1.5rem 1.5rem;
+    position: relative;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.06) 0%, transparent 50%);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 20px;
+    border-left: 4px solid var(--primary-gold);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.services-term-hint {
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-gold);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.services-term-hint::after {
+    content: '→';
+    opacity: 0.7;
+    font-weight: 700;
+}
+
+.services-term-line {
+    width: 48px;
+    height: 3px;
+    margin: 0 0 1rem;
+    background: linear-gradient(90deg, var(--primary-gold), rgba(212, 175, 55, 0.3));
+    border-radius: 2px;
+    pointer-events: none;
 }
 
 .btn-term {
@@ -1963,7 +2189,12 @@ section {
     min-height: 100vh;
 }
 
-/* Login */
+/* Login — скрываем при успешном входе */
+.admin-login[hidden],
+.admin-login.admin-hidden {
+    display: none !important;
+}
+
 .admin-login {
     min-height: 100vh;
     display: flex;
@@ -2034,7 +2265,16 @@ section {
     color: var(--gray-800);
 }
 
-/* Admin Panel */
+/* Admin Panel — показываем после входа */
+.admin-panel[hidden] {
+    display: none !important;
+}
+
+.admin-panel:not([hidden]) {
+    display: block !important;
+    min-height: 100vh;
+}
+
 .admin-panel {
     padding-bottom: 3rem;
 }
@@ -2268,6 +2508,17 @@ section {
     margin: 0.25rem 0;
 }
 
+.admin-request-body a,
+.admin-section-card a {
+    color: var(--primary-gold);
+    text-decoration: none;
+}
+.admin-request-body a:hover,
+.admin-section-card a:hover {
+    color: var(--primary-gold-light);
+    text-decoration: underline;
+}
+
 .admin-request-mark-done {
     margin-top: 0.5rem;
 }
@@ -2278,12 +2529,50 @@ section {
 }
 
 @media (max-width: 768px) {
+    .admin-login {
+        padding: 1rem;
+    }
     .admin-login-box {
         padding: 1.5rem;
     }
     .admin-header-inner {
         flex-direction: column;
         gap: 1rem;
+        align-items: stretch;
+    }
+    .admin-header-actions {
+        flex-wrap: wrap;
+    }
+    .admin-header-actions .btn-secondary,
+    .admin-header-actions .btn-primary {
+        flex: 1;
+        min-width: 140px;
+        text-align: center;
+    }
+    .admin-main .container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .admin-section-card {
+        padding: 1.25rem;
+    }
+    .admin-request-item {
+        padding: 1rem;
+    }
+    .admin-request-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .admin-request-badge {
+        margin-left: 0;
+    }
+    .admin-request-mark-done {
+        width: 100%;
+        padding: 0.75rem;
+    }
+    .admin-request-body {
+        word-break: break-word;
     }
     .admin-tabs {
         flex-wrap: wrap;

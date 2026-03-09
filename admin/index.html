@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin – IC Immobilien Service</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-page">
+    <div class="admin-wrap">
+        <!-- Страница входа -->
+        <div id="adminLogin" class="admin-login">
+            <div class="admin-login-box">
+                <h1>Admin</h1>
+                <p class="admin-login-hint">Anmelden, um Anfragen zu verwalten.</p>
+                <form class="admin-login-form" id="loginForm" novalidate>
+                    <input type="text" id="adminUser" name="login" placeholder="Login" autocomplete="username">
+                    <input type="password" id="adminPass" name="password" placeholder="Passwort" autocomplete="current-password">
+                    <button type="button" id="loginSubmit" class="btn-primary btn-large">Anmelden</button>
+                </form>
+                <p id="loginError" class="admin-login-set-hint" style="color: #ef4444; margin-top: 0.5rem; display: none;"></p>
+            </div>
+        </div>
+
+        <!-- Панель админки (после входа) -->
+        <div id="adminPanel" class="admin-panel" hidden>
+            <header class="admin-header">
+                <div class="container">
+                    <div class="admin-header-inner">
+                        <h1>Admin</h1>
+                        <div class="admin-header-actions">
+                            <a href="../index.html" class="btn-secondary">Zurück zur Seite</a>
+                            <button type="button" id="adminLogout" class="btn-primary">Abmelden</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="admin-main">
+                <div class="container">
+                    <div class="admin-tabs">
+                        <button type="button" class="admin-tab active" data-tab="contact">Kontaktanfragen</button>
+                        <button type="button" class="admin-tab" data-tab="calendar">Terminbuchungen</button>
+                    </div>
+
+                    <div id="tabContact" class="admin-tab-panel active">
+                        <div class="admin-section-card">
+                            <h2>Anfragen aus dem Kontaktformular</h2>
+                            <div id="adminContactList" class="admin-requests-list"></div>
+                            <p id="adminContactEmpty" class="admin-empty" style="display: none;">Noch keine Kontaktanfragen.</p>
+                        </div>
+                    </div>
+
+                    <div id="tabCalendar" class="admin-tab-panel">
+                        <div class="admin-section-card">
+                            <h2>Buchungen aus dem Kalender</h2>
+                            <div id="adminCalendarList" class="admin-requests-list"></div>
+                            <p id="adminCalendarEmpty" class="admin-empty" style="display: none;">Noch keine Terminbuchungen.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // SICHERHEIT: Passwort nie im Frontend-Code lassen (für alle sichtbar).
+            // Produktion auf IONOS: Backend (PHP/Node) mit Session/JWT oder Supabase/Firebase Auth nutzen.
+            // Optional: admin-config.local.js (in .gitignore) definiert window.ADMIN_CONFIG = { login, password };
+            var ADMIN_STORAGE = (function () {
+                if (typeof window.ADMIN_CONFIG === 'object' && window.ADMIN_CONFIG.login)
+                    return { login: window.ADMIN_CONFIG.login, password: window.ADMIN_CONFIG.password };
+                // Nur für lokale Entwicklung — vor Go-Live ersetzen (siehe SICHERHEIT.md)
+                return { login: 'admin', password: 'BitteInProduktionBackendNutzen' };
+            })();
+
+            var AUTH_KEY = 'admin_auth';
+            var STORAGE_REQUESTS = 'admin_requests';
+
+            var loginEl = document.getElementById('adminLogin');
+            var panelEl = document.getElementById('adminPanel');
+            var loginForm = document.getElementById('loginForm');
+            var loginError = document.getElementById('loginError');
+            var adminUser = document.getElementById('adminUser');
+            var adminPass = document.getElementById('adminPass');
+            var adminLogout = document.getElementById('adminLogout');
+            var tabContact = document.getElementById('tabContact');
+            var tabCalendar = document.getElementById('tabCalendar');
+            var contactList = document.getElementById('adminContactList');
+            var contactEmpty = document.getElementById('adminContactEmpty');
+            var calendarList = document.getElementById('adminCalendarList');
+            var calendarEmpty = document.getElementById('adminCalendarEmpty');
+
+            function isAuth() {
+                return sessionStorage.getItem(AUTH_KEY) === '1';
+            }
+
+            function setAuth(ok) {
+                if (ok) sessionStorage.setItem(AUTH_KEY, '1');
+                else sessionStorage.removeItem(AUTH_KEY);
+            }
+
+            function showScreen() {
+                if (isAuth()) {
+                    loginEl.hidden = true;
+                    loginEl.classList.add('admin-hidden');
+                    panelEl.removeAttribute('hidden');
+                    panelEl.classList.remove('admin-hidden');
+                    renderBothTabs();
+                    switchTab('contact');
+                    window.scrollTo(0, 0);
+                } else {
+                    loginEl.hidden = false;
+                    loginEl.classList.remove('admin-hidden');
+                    panelEl.hidden = true;
+                    panelEl.classList.add('admin-hidden');
+                    if (loginError) loginError.style.display = 'none';
+                }
+            }
+
+            function doLogin() {
+                var user = (adminUser && adminUser.value ? adminUser.value : '').trim();
+                var pass = adminPass ? adminPass.value : '';
+                if (loginError) loginError.style.display = 'none';
+                if (user === ADMIN_STORAGE.login && pass === ADMIN_STORAGE.password) {
+                    setAuth(true);
+                    loginEl.hidden = true;
+                    loginEl.classList.add('admin-hidden');
+                    panelEl.removeAttribute('hidden');
+                    panelEl.classList.remove('admin-hidden');
+                    renderBothTabs();
+                    switchTab('contact');
+                    window.scrollTo(0, 0);
+                } else {
+                    if (loginError) {
+                        loginError.textContent = 'Falscher Login oder Passwort.';
+                        loginError.style.display = 'block';
+                    }
+                }
+            }
+
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                doLogin();
+                return false;
+            });
+            if (document.getElementById('loginSubmit')) {
+                document.getElementById('loginSubmit').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    doLogin();
+                });
+            }
+            if (adminLogout) {
+                adminLogout.addEventListener('click', function () {
+                    setAuth(false);
+                    showScreen();
+                });
+            }
+
+            // Переключение вкладок
+            var tabBtns = document.querySelectorAll('.admin-tab[data-tab]');
+            function switchTab(tabName) {
+                tabBtns.forEach(function (btn) {
+                    btn.classList.toggle('active', btn.getAttribute('data-tab') === tabName);
+                });
+                if (tabContact) tabContact.classList.toggle('active', tabName === 'contact');
+                if (tabCalendar) tabCalendar.classList.toggle('active', tabName === 'calendar');
+            }
+            tabBtns.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    switchTab(btn.getAttribute('data-tab'));
+                });
+            });
+
+            function getRequests() {
+                try {
+                    var raw = localStorage.getItem(STORAGE_REQUESTS);
+                    var list = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(list) ? list : [];
+                } catch (_) {
+                    return [];
+                }
+            }
+
+            function saveRequests(list) {
+                try {
+                    localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(list));
+                } catch (_) {}
+            }
+
+            function formatDate(iso) {
+                if (!iso) return '–';
+                try {
+                    var d = new Date(iso);
+                    return d.toLocaleDateString('de-DE', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch (_) {
+                    return iso;
+                }
+            }
+
+            function escapeHtml(s) {
+                if (s == null) return '';
+                var div = document.createElement('div');
+                div.textContent = s;
+                return div.innerHTML;
+            }
+
+            function markProcessed(id) {
+                var list = getRequests();
+                var idx = list.findIndex(function (r) { return r.id === id; });
+                if (idx === -1) return;
+                list[idx].processed = true;
+                saveRequests(list);
+                renderBothTabs();
+            }
+
+            function renderContactTab() {
+                if (!contactList || !contactEmpty) return;
+                var list = getRequests().filter(function (r) { return r.type === 'contact'; });
+                list.sort(function (a, b) {
+                    return (b.createdAt || '').toString().localeCompare((a.createdAt || '').toString());
+                });
+                if (list.length === 0) {
+                    contactList.innerHTML = '';
+                    contactEmpty.style.display = 'block';
+                    return;
+                }
+                contactEmpty.style.display = 'none';
+                contactList.innerHTML = list.map(function (r) {
+                    var dateStr = formatDate(r.createdAt);
+                    var processed = r.processed === true;
+                    var body = [
+                        r.name && '<p><strong>Name:</strong> ' + escapeHtml(r.name) + '</p>',
+                        r.email && '<p><strong>E-Mail:</strong> <a href="mailto:' + escapeHtml(r.email) + '">' + escapeHtml(r.email) + '</a></p>',
+                        r.phone && '<p><strong>Telefon:</strong> <a href="tel:' + escapeHtml(r.phone) + '">' + escapeHtml(r.phone) + '</a></p>',
+                        r.message && '<p><strong>Nachricht:</strong> ' + escapeHtml(r.message) + '</p>',
+                        (r.date || (r.slots && r.slots.length)) ? '<p><strong>Termin:</strong> ' + escapeHtml(r.date || '') + (r.slots && r.slots.length ? ' – ' + r.slots.join(', ') : '') + '</p>' : ''
+                    ].filter(Boolean).join('');
+                    var doneBtn = processed
+                        ? '<span class="admin-request-badge">Erledigt</span>'
+                        : '<button type="button" class="btn-secondary admin-request-mark-done" data-id="' + escapeHtml(r.id) + '">Als erledigt markieren</button>';
+                    return '<div class="admin-request-item' + (processed ? ' processed' : '') + '">' +
+                        '<div class="admin-request-header">' +
+                        '<span class="admin-request-date">' + escapeHtml(dateStr) + '</span>' + doneBtn +
+                        '</div><div class="admin-request-body">' + body + '</div></div>';
+                }).join('');
+                contactList.querySelectorAll('.admin-request-mark-done').forEach(function (btn) {
+                    btn.addEventListener('click', function () { markProcessed(btn.getAttribute('data-id')); });
+                });
+            }
+
+            function renderCalendarTab() {
+                if (!calendarList || !calendarEmpty) return;
+                var list = getRequests().filter(function (r) { return r.type === 'calendar'; });
+                list.sort(function (a, b) {
+                    return (b.createdAt || '').toString().localeCompare((a.createdAt || '').toString());
+                });
+                if (list.length === 0) {
+                    calendarList.innerHTML = '';
+                    calendarEmpty.style.display = 'block';
+                    return;
+                }
+                calendarEmpty.style.display = 'none';
+                calendarList.innerHTML = list.map(function (r) {
+                    var dateStr = formatDate(r.createdAt);
+                    var processed = r.processed === true;
+                    var body = '<p><strong>Datum:</strong> ' + escapeHtml(r.formattedDate || r.date || '') + '</p>' +
+                        (r.slotsText ? '<p><strong>Zeitfenster:</strong> ' + escapeHtml(r.slotsText) + '</p>' : (r.slots && r.slots.length ? '<p><strong>Slots:</strong> ' + escapeHtml(r.slots.join(', ')) + '</p>' : ''));
+                    var doneBtn = processed
+                        ? '<span class="admin-request-badge">Erledigt</span>'
+                        : '<button type="button" class="btn-secondary admin-request-mark-done" data-id="' + escapeHtml(r.id) + '">Als erledigt markieren</button>';
+                    return '<div class="admin-request-item' + (processed ? ' processed' : '') + '">' +
+                        '<div class="admin-request-header">' +
+                        '<span class="admin-request-date">' + escapeHtml(dateStr) + '</span>' + doneBtn +
+                        '</div><div class="admin-request-body">' + body + '</div></div>';
+                }).join('');
+                calendarList.querySelectorAll('.admin-request-mark-done').forEach(function (btn) {
+                    btn.addEventListener('click', function () { markProcessed(btn.getAttribute('data-id')); });
+                });
+            }
+
+            function renderBothTabs() {
+                renderContactTab();
+                renderCalendarTab();
+            }
+
+            showScreen();
+        });
+    </script>
+</body>
+</html>

@@ -3,3 +3,6 @@ msp_source/
 
 # Local dev artifacts
 .server.pid
+
+# Admin credentials — never commit (see SICHERHEIT.md)
+admin-config.local.js
