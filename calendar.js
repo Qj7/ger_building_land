@@ -261,6 +261,25 @@ class Calendar {
 
         this.showMessage(message, 'success');
 
+        // Speichern für Admin (Terminbuchungen)
+        const STORAGE_REQUESTS = 'admin_requests';
+        try {
+            const raw = localStorage.getItem(STORAGE_REQUESTS);
+            const list = raw ? JSON.parse(raw) : [];
+            if (!Array.isArray(list)) list = [];
+            list.push({
+                id: 'cal-' + Date.now(),
+                type: 'calendar',
+                date: this.formatDateKey(this.selectedDate),
+                slots: Array.from(this.selectedSlots),
+                formattedDate: formattedDate,
+                slotsText: slotsText,
+                createdAt: new Date().toISOString(),
+                processed: false
+            });
+            localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(list));
+        } catch (_) {}
+
         const slotsParam = encodeURIComponent(Array.from(this.selectedSlots).join(','));
         setTimeout(() => {
             window.location.href = `index.html#contact?date=${this.formatDateKey(this.selectedDate)}&slots=${slotsParam}`;
