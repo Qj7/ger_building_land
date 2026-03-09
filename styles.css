@@ -595,6 +595,101 @@ section {
     border-color: transparent;
 }
 
+/* Кнопка-ссылка "Termin vereinbaren" (отдельный класс, макс 330px) */
+.services-term-wrap {
+    max-width: 900px;
+    margin: 1.25rem auto 0;
+}
+
+.btn-term {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    max-width: 330px;
+    width: max-content;
+    background: var(--gray-200);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+    color: var(--primary-gold);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.btn-term::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(105deg, rgba(212, 175, 55, 0.08) 0%, transparent 45%),
+        radial-gradient(400px 80px at 0% 50%, rgba(212, 175, 55, 0.12), transparent 70%);
+    opacity: 1;
+    pointer-events: none;
+}
+
+.btn-term:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+}
+
+.btn-term:hover::before {
+    background:
+        linear-gradient(105deg, rgba(212, 175, 55, 0.12) 0%, transparent 45%),
+        radial-gradient(400px 80px at 0% 50%, rgba(212, 175, 55, 0.18), transparent 70%);
+}
+
+.btn-term-icon {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--primary-gold);
+}
+
+.btn-term-icon svg {
+    display: block;
+}
+
+.btn-term-text {
+    position: relative;
+    z-index: 1;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary-gold);
+}
+
+.btn-term-arrow {
+    position: relative;
+    z-index: 1;
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
+    color: var(--gray-50);
+    font-weight: 800;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+
+.btn-term:hover .btn-term-arrow {
+    transform: translateX(4px);
+}
+
+.btn-term:focus-visible {
+    outline: 3px solid var(--primary-gold);
+    outline-offset: 4px;
+}
+
 /* Sublist under "Hausmeisterservice & Handwerkerleistungen" */
 .services-sublist {
     list-style: none;
