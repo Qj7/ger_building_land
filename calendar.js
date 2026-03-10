@@ -255,11 +255,24 @@ class Calendar {
     confirmAppointment() {
         if (!this.selectedDate || this.selectedSlots.size === 0) return;
 
+        const dateKey = this.formatDateKey(this.selectedDate);
         const formattedDate = this.formatDateDisplay(this.selectedDate);
-        const slotsText = Array.from(this.selectedSlots).map(s => s.replace('-', '–') + ' Uhr').join(', ');
+        const slotsArray = Array.from(this.selectedSlots);
+        const slotsText = slotsArray.map(s => s.replace('-', '–') + ' Uhr').join(', ');
         const message = `Vielen Dank! Termin(e) am ${formattedDate} für ${slotsText} ausgewählt. Wir melden uns zur Bestätigung.`;
 
         this.showMessage(message, 'success');
+
+        // Сохраняем выбор пользователя для страницы контакта (sessionStorage)
+        const CALENDAR_SELECTION_KEY = 'calendar_selection';
+        try {
+            sessionStorage.setItem(CALENDAR_SELECTION_KEY, JSON.stringify({
+                date: dateKey,
+                formattedDate: formattedDate,
+                slots: slotsArray,
+                slotsText: slotsText
+            }));
+        } catch (_) {}
 
         // Speichern für Admin (Terminbuchungen)
         const STORAGE_REQUESTS = 'admin_requests';
@@ -270,8 +283,8 @@ class Calendar {
             list.push({
                 id: 'cal-' + Date.now(),
                 type: 'calendar',
-                date: this.formatDateKey(this.selectedDate),
-                slots: Array.from(this.selectedSlots),
+                date: dateKey,
+                slots: slotsArray,
                 formattedDate: formattedDate,
                 slotsText: slotsText,
                 createdAt: new Date().toISOString(),
@@ -280,9 +293,11 @@ class Calendar {
             localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(list));
         } catch (_) {}
 
-        const slotsParam = encodeURIComponent(Array.from(this.selectedSlots).join(','));
+        // Переход на контакт: query-параметры в URL, чтобы index.html их прочитал
+        const slotsParam = encodeURIComponent(slotsArray.join(','));
+        const redirectUrl = `index.html?date=${encodeURIComponent(dateKey)}&slots=${slotsParam}#contact`;
         setTimeout(() => {
-            window.location.href = `index.html#contact?date=${this.formatDateKey(this.selectedDate)}&slots=${slotsParam}`;
+            window.location.href = redirectUrl;
         }, 2000);
     }
 
@@ -335,6 +350,30 @@ class Calendar {
         const confirmBtn = document.getElementById('confirmDate');
         if (confirmBtn) {
             confirmBtn.addEventListener('click', () => this.confirmAppointment());
+        }
+
+        const contactLink = document.querySelector('a[href="index.html#contact"]');
+        if (contactLink) {
+            contactLink.addEventListener('click', (e) => {
+                if (this.selectedDate && this.selectedSlots.size > 0) {
+                    e.preventDefault();
+                    const dateKey = this.formatDateKey(this.selectedDate);
+                    const formattedDate = this.formatDateDisplay(this.selectedDate);
+                    const slotsArray = Array.from(this.selectedSlots);
+                    const slotsText = slotsArray.map(s => s.replace('-', '–') + ' Uhr').join(', ');
+                    const CALENDAR_SELECTION_KEY = 'calendar_selection';
+                    try {
+                        sessionStorage.setItem(CALENDAR_SELECTION_KEY, JSON.stringify({
+                            date: dateKey,
+                            formattedDate: formattedDate,
+                            slots: slotsArray,
+                            slotsText: slotsText
+                        }));
+                    } catch (_) {}
+                    const slotsParam = encodeURIComponent(slotsArray.join(','));
+                    window.location.href = `index.html?date=${encodeURIComponent(dateKey)}&slots=${slotsParam}#contact`;
+                }
+            });
         }
     }
 }

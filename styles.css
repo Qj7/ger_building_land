@@ -1311,6 +1311,17 @@ section {
     margin-bottom: 0.5rem;
 }
 
+.contact-card p a {
+    color: var(--primary-gold);
+    text-decoration: none;
+    transition: color 0.25s ease;
+}
+
+.contact-card p a:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
 .contact-actions {
     display: flex;
     flex-direction: column;
@@ -1349,6 +1360,32 @@ section {
     padding: 2.5rem;
     border-radius: 16px;
     box-shadow: var(--shadow-lg);
+}
+
+.contact-calendar-summary {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: rgba(212, 175, 55, 0.15);
+    border: 2px solid var(--gold, #d4af37);
+    border-radius: 12px;
+}
+
+.contact-calendar-summary-title {
+    font-weight: 700;
+    margin: 0 0 0.35em;
+    color: var(--gray-900, #1a1a1a);
+}
+
+.contact-calendar-summary-value {
+    margin: 0 0 0.5em;
+    font-size: 1.05rem;
+    color: var(--gray-800, #2d2d2d);
+}
+
+.contact-calendar-summary-hint {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--gray-600, #555);
 }
 
 .contact-form {
@@ -1401,6 +1438,14 @@ section {
 .form-group textarea {
     resize: vertical;
     min-height: 120px;
+}
+
+/* Сообщение над кнопкой «Senden» в контактной форме */
+.form-message-wrap {
+    min-height: 0;
+}
+.form-message-wrap:not(:empty) {
+    margin-bottom: 1rem;
 }
 
 /* Footer */
