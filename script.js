@@ -48,6 +48,8 @@ document.addEventListener('click', (e) => {
 const STORAGE_REQUESTS = 'admin_requests';
 const contactForm = document.getElementById('contactForm');
 
+const CALENDAR_SELECTION_KEY = 'calendar_selection';
+
 function getUrlParams() {
     const s = (window.location.search || '').slice(1);
     const out = {};
@@ -56,6 +58,28 @@ function getUrlParams() {
         if (k && v != null) out[k] = v;
     });
     return out;
+}
+
+// Данные календаря: из URL (после перехода с calendar.html) или из sessionStorage
+function getCalendarSelection() {
+    const params = getUrlParams();
+    if (params.date && params.slots) {
+        const slots = params.slots.split(',').map(s => s.trim()).filter(Boolean);
+        const formattedDate = params.formattedDate || params.date;
+        return {
+            date: params.date,
+            formattedDate: formattedDate,
+            slots: slots,
+            slotsText: slots.map(s => s.replace('-', '–') + ' Uhr').join(', ')
+        };
+    }
+    try {
+        const raw = sessionStorage.getItem(CALENDAR_SELECTION_KEY);
+        if (!raw) return null;
+        const data = JSON.parse(raw);
+        if (data && data.date && Array.isArray(data.slots)) return data;
+    } catch (_) {}
+    return null;
 }
 
 function getSupabase() {
@@ -67,16 +91,19 @@ if (contactForm) {
         e.preventDefault();
 
         const formData = new FormData(contactForm);
-        const params = getUrlParams();
+        const calendar = getCalendarSelection();
         const data = {
             name: (formData.get('name') || '').trim(),
             email: (formData.get('email') || '').trim(),
             phone: (formData.get('phone') || '').trim(),
             message: (formData.get('message') || '').trim(),
-            date: params.date || null,
-            slots: params.slots ? params.slots.split(',') : null
+            date: calendar ? calendar.date : null,
+            slots: calendar ? calendar.slots : null,
+            formattedDate: calendar ? calendar.formattedDate : null,
+            slotsText: calendar ? calendar.slotsText : null
         };
 
+        let saved = false;
         const sb = getSupabase();
         if (sb) {
             try {
@@ -87,8 +114,11 @@ if (contactForm) {
                     phone: data.phone,
                     message: data.message,
                     date: data.date,
-                    slots: data.slots
+                    slots: data.slots,
+                    formattedDate: data.formattedDate,
+                    slotsText: data.slotsText
                 });
+                saved = true;
             } catch (_) {}
         } else {
             try {
@@ -104,27 +134,42 @@ if (contactForm) {
                     message: data.message,
                     date: data.date,
                     slots: data.slots,
+                    formattedDate: data.formattedDate,
+                    slotsText: data.slotsText,
                     createdAt: new Date().toISOString(),
                     processed: false
                 });
                 localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(list));
+                saved = true;
             } catch (_) {}
         }
 
-        showFormMessage('Vielen Dank! Ihre Nachricht wurde gesendet. Wir werden uns in Kürze bei Ihnen melden.', 'success');
-        contactForm.reset();
+        if (saved) {
+            try { sessionStorage.removeItem(CALENDAR_SELECTION_KEY); } catch (_) {}
+            showFormMessage('Vielen Dank! Ihre Nachricht wurde gesendet. Wir werden uns in Kürze bei Ihnen melden.', 'success');
+            contactForm.reset();
+            scrollToFormMessage();
+        } else {
+            showFormMessage('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.', 'error');
+        }
     });
 }
 
-// Show form message
-function showFormMessage(message, type) {
-    // Remove existing message if any
-    const existingMessage = document.querySelector('.form-message');
-    if (existingMessage) {
-        existingMessage.remove();
-    }
+function scrollToFormMessage() {
+    const form = document.getElementById('contactForm');
+    const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+    if (submitBtn) submitBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
 
-    // Create message element
+// Сообщение строго над кнопкой «Senden»: вставляем перед кнопкой в форме
+function showFormMessage(message, type) {
+    const form = document.getElementById('contactForm');
+    const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+    if (!form || !submitBtn) return;
+
+    const oldMsg = form.querySelector('.form-message');
+    if (oldMsg) oldMsg.remove();
+
     const messageEl = document.createElement('div');
     messageEl.className = `form-message form-message-${type}`;
     messageEl.textContent = message;
@@ -138,10 +183,8 @@ function showFormMessage(message, type) {
         border: 2px solid ${type === 'success' ? '#d4af37' : '#ef4444'};
     `;
 
-    // Insert message before form
-    contactForm.insertBefore(messageEl, contactForm.firstChild);
+    form.insertBefore(messageEl, submitBtn);
 
-    // Remove message after 5 seconds
     setTimeout(() => {
         messageEl.style.opacity = '0';
         messageEl.style.transition = 'opacity 0.3s ease';
@@ -185,9 +228,35 @@ function initFooterServicesLinks() {
     });
 }
 
+function showCalendarSelectionOnContactPage() {
+    const calendar = getCalendarSelection();
+    const contactSection = document.getElementById('contact');
+    const formWrapper = document.querySelector('.contact-form-wrapper');
+    if (!calendar || !contactSection || !formWrapper) return;
+
+    const existing = document.getElementById('contactCalendarSummary');
+    if (existing) existing.remove();
+
+    const summary = document.createElement('div');
+    summary.id = 'contactCalendarSummary';
+    summary.className = 'contact-calendar-summary';
+    summary.setAttribute('aria-live', 'polite');
+    summary.innerHTML = `
+        <p class="contact-calendar-summary-title">Ihr gewählter Termin</p>
+        <p class="contact-calendar-summary-value">${calendar.formattedDate}, ${calendar.slotsText}</p>
+        <p class="contact-calendar-summary-hint">Füllen Sie das Formular aus – Termin und Kontaktdaten werden gemeinsam übermittelt.</p>
+    `;
+    formWrapper.insertBefore(summary, formWrapper.firstChild);
+
+    if (window.location.hash === '#contact') {
+        contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
 // Observe elements for animation
 document.addEventListener('DOMContentLoaded', () => {
     initFooterServicesLinks();
+    showCalendarSelectionOnContactPage();
 
     const animateElements = document.querySelectorAll(
         '.services-list-item, .about-bridge, .process-step, .service-block, .about-card, .contact-card, .contact-form-wrapper, .callout'

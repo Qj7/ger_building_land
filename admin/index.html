@@ -41,24 +41,12 @@
 
             <main class="admin-main">
                 <div class="container">
-                    <div class="admin-tabs">
-                        <button type="button" class="admin-tab active" data-tab="contact">Kontaktanfragen</button>
-                        <button type="button" class="admin-tab" data-tab="calendar">Terminbuchungen</button>
-                    </div>
-
                     <div id="tabContact" class="admin-tab-panel active">
                         <div class="admin-section-card">
                             <h2>Anfragen aus dem Kontaktformular</h2>
+                            <p class="admin-section-hint">Kontaktanfragen inkl. gewählter Termine (falls vom Kalender übernommen).</p>
                             <div id="adminContactList" class="admin-requests-list"></div>
                             <p id="adminContactEmpty" class="admin-empty" style="display: none;">Noch keine Kontaktanfragen.</p>
-                        </div>
-                    </div>
-
-                    <div id="tabCalendar" class="admin-tab-panel">
-                        <div class="admin-section-card">
-                            <h2>Buchungen aus dem Kalender</h2>
-                            <div id="adminCalendarList" class="admin-requests-list"></div>
-                            <p id="adminCalendarEmpty" class="admin-empty" style="display: none;">Noch keine Terminbuchungen.</p>
                         </div>
                     </div>
                 </div>
@@ -76,7 +64,7 @@
                 if (typeof window.ADMIN_CONFIG === 'object' && window.ADMIN_CONFIG.login)
                     return { login: window.ADMIN_CONFIG.login, password: window.ADMIN_CONFIG.password };
                 // Nur für lokale Entwicklung — vor Go-Live ersetzen (siehe SICHERHEIT.md)
-                return { login: 'admin', password: 'BitteInProduktionBackendNutzen' };
+                return { login: 'admin', password: 'i12345' };
             })();
 
             var AUTH_KEY = 'admin_auth';
@@ -89,12 +77,8 @@
             var adminUser = document.getElementById('adminUser');
             var adminPass = document.getElementById('adminPass');
             var adminLogout = document.getElementById('adminLogout');
-            var tabContact = document.getElementById('tabContact');
-            var tabCalendar = document.getElementById('tabCalendar');
             var contactList = document.getElementById('adminContactList');
             var contactEmpty = document.getElementById('adminContactEmpty');
-            var calendarList = document.getElementById('adminCalendarList');
-            var calendarEmpty = document.getElementById('adminCalendarEmpty');
 
             function isAuth() {
                 return sessionStorage.getItem(AUTH_KEY) === '1';
@@ -111,8 +95,7 @@
                     loginEl.classList.add('admin-hidden');
                     panelEl.removeAttribute('hidden');
                     panelEl.classList.remove('admin-hidden');
-                    renderBothTabs();
-                    switchTab('contact');
+                    renderContactTab();
                     window.scrollTo(0, 0);
                 } else {
                     loginEl.hidden = false;
@@ -133,8 +116,7 @@
                     loginEl.classList.add('admin-hidden');
                     panelEl.removeAttribute('hidden');
                     panelEl.classList.remove('admin-hidden');
-                    renderBothTabs();
-                    switchTab('contact');
+                    renderContactTab();
                     window.scrollTo(0, 0);
                 } else {
                     if (loginError) {
@@ -161,21 +143,6 @@
                     showScreen();
                 });
             }
-
-            // Переключение вкладок
-            var tabBtns = document.querySelectorAll('.admin-tab[data-tab]');
-            function switchTab(tabName) {
-                tabBtns.forEach(function (btn) {
-                    btn.classList.toggle('active', btn.getAttribute('data-tab') === tabName);
-                });
-                if (tabContact) tabContact.classList.toggle('active', tabName === 'contact');
-                if (tabCalendar) tabCalendar.classList.toggle('active', tabName === 'calendar');
-            }
-            tabBtns.forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    switchTab(btn.getAttribute('data-tab'));
-                });
-            });
 
             function getRequests() {
                 try {
@@ -222,7 +189,7 @@
                 if (idx === -1) return;
                 list[idx].processed = true;
                 saveRequests(list);
-                renderBothTabs();
+                renderContactTab();
             }
 
             function renderContactTab() {
@@ -258,41 +225,6 @@
                 contactList.querySelectorAll('.admin-request-mark-done').forEach(function (btn) {
                     btn.addEventListener('click', function () { markProcessed(btn.getAttribute('data-id')); });
                 });
-            }
-
-            function renderCalendarTab() {
-                if (!calendarList || !calendarEmpty) return;
-                var list = getRequests().filter(function (r) { return r.type === 'calendar'; });
-                list.sort(function (a, b) {
-                    return (b.createdAt || '').toString().localeCompare((a.createdAt || '').toString());
-                });
-                if (list.length === 0) {
-                    calendarList.innerHTML = '';
-                    calendarEmpty.style.display = 'block';
-                    return;
-                }
-                calendarEmpty.style.display = 'none';
-                calendarList.innerHTML = list.map(function (r) {
-                    var dateStr = formatDate(r.createdAt);
-                    var processed = r.processed === true;
-                    var body = '<p><strong>Datum:</strong> ' + escapeHtml(r.formattedDate || r.date || '') + '</p>' +
-                        (r.slotsText ? '<p><strong>Zeitfenster:</strong> ' + escapeHtml(r.slotsText) + '</p>' : (r.slots && r.slots.length ? '<p><strong>Slots:</strong> ' + escapeHtml(r.slots.join(', ')) + '</p>' : ''));
-                    var doneBtn = processed
-                        ? '<span class="admin-request-badge">Erledigt</span>'
-                        : '<button type="button" class="btn-secondary admin-request-mark-done" data-id="' + escapeHtml(r.id) + '">Als erledigt markieren</button>';
-                    return '<div class="admin-request-item' + (processed ? ' processed' : '') + '">' +
-                        '<div class="admin-request-header">' +
-                        '<span class="admin-request-date">' + escapeHtml(dateStr) + '</span>' + doneBtn +
-                        '</div><div class="admin-request-body">' + body + '</div></div>';
-                }).join('');
-                calendarList.querySelectorAll('.admin-request-mark-done').forEach(function (btn) {
-                    btn.addEventListener('click', function () { markProcessed(btn.getAttribute('data-id')); });
-                });
-            }
-
-            function renderBothTabs() {
-                renderContactTab();
-                renderCalendarTab();
             }
 
             showScreen();
