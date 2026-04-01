@@ -43,8 +43,8 @@
                 <div class="container">
                     <div id="tabContact" class="admin-tab-panel active">
                         <div class="admin-section-card">
-                            <h2>Anfragen aus dem Kontaktformular</h2>
-                            <p class="admin-section-hint">Kontaktanfragen inkl. gewählter Termine (falls vom Kalender übernommen).</p>
+                            <h2>Anfragen und Kalenderbuchungen</h2>
+                            <p class="admin-section-hint">Kontaktanfragen und direkte Terminbuchungen aus dem Kalender.</p>
                             <div id="adminContactList" class="admin-requests-list"></div>
                             <p id="adminContactEmpty" class="admin-empty" style="display: none;">Noch keine Kontaktanfragen.</p>
                         </div>
@@ -56,20 +56,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-
-            // SICHERHEIT: Passwort nie im Frontend-Code lassen (für alle sichtbar).
-            // Produktion auf IONOS: Backend (PHP/Node) mit Session/JWT oder Supabase/Firebase Auth nutzen.
-            // Optional: admin-config.local.js (in .gitignore) definiert window.ADMIN_CONFIG = { login, password };
-            var ADMIN_STORAGE = (function () {
-                if (typeof window.ADMIN_CONFIG === 'object' && window.ADMIN_CONFIG.login)
-                    return { login: window.ADMIN_CONFIG.login, password: window.ADMIN_CONFIG.password };
-                // Nur für lokale Entwicklung — vor Go-Live ersetzen (siehe SICHERHEIT.md)
-                return { login: 'admin', password: 'i12345' };
-            })();
-
-            var AUTH_KEY = 'admin_auth';
-            var STORAGE_REQUESTS = 'admin_requests';
-
             var loginEl = document.getElementById('adminLogin');
             var panelEl = document.getElementById('adminPanel');
             var loginForm = document.getElementById('loginForm');
@@ -80,22 +66,32 @@
             var contactList = document.getElementById('adminContactList');
             var contactEmpty = document.getElementById('adminContactEmpty');
 
-            function isAuth() {
-                return sessionStorage.getItem(AUTH_KEY) === '1';
+            async function api(url, options) {
+                var response = await fetch(url, options || {});
+                var data = {};
+                try {
+                    data = await response.json();
+                } catch (_) {}
+                return { ok: response.ok, data: data };
             }
 
-            function setAuth(ok) {
-                if (ok) sessionStorage.setItem(AUTH_KEY, '1');
-                else sessionStorage.removeItem(AUTH_KEY);
+            async function isAuth() {
+                try {
+                    var result = await api('../api/auth-check.php', { method: 'GET' });
+                    return !!(result.ok && result.data && result.data.authenticated);
+                } catch (_) {
+                    return false;
+                }
             }
 
-            function showScreen() {
-                if (isAuth()) {
+            async function showScreen() {
+                var authed = await isAuth();
+                if (authed) {
                     loginEl.hidden = true;
                     loginEl.classList.add('admin-hidden');
                     panelEl.removeAttribute('hidden');
                     panelEl.classList.remove('admin-hidden');
-                    renderContactTab();
+                    await renderContactTab();
                     window.scrollTo(0, 0);
                 } else {
                     loginEl.hidden = false;
@@ -106,23 +102,25 @@
                 }
             }
 
-            function doLogin() {
+            async function doLogin() {
                 var user = (adminUser && adminUser.value ? adminUser.value : '').trim();
                 var pass = adminPass ? adminPass.value : '';
                 if (loginError) loginError.style.display = 'none';
-                if (user === ADMIN_STORAGE.login && pass === ADMIN_STORAGE.password) {
-                    setAuth(true);
-                    loginEl.hidden = true;
-                    loginEl.classList.add('admin-hidden');
-                    panelEl.removeAttribute('hidden');
-                    panelEl.classList.remove('admin-hidden');
-                    renderContactTab();
-                    window.scrollTo(0, 0);
-                } else {
-                    if (loginError) {
-                        loginError.textContent = 'Falscher Login oder Passwort.';
-                        loginError.style.display = 'block';
-                    }
+
+                var result = await api('../api/login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ login: user, password: pass })
+                });
+
+                if (result.ok) {
+                    await showScreen();
+                    return;
+                }
+
+                if (loginError) {
+                    loginError.textContent = (result.data && result.data.error) ? result.data.error : 'Falscher Login oder Passwort.';
+                    loginError.style.display = 'block';
                 }
             }
 
@@ -131,33 +129,20 @@
                 doLogin();
                 return false;
             });
-            if (document.getElementById('loginSubmit')) {
-                document.getElementById('loginSubmit').addEventListener('click', function (e) {
+
+            var loginSubmit = document.getElementById('loginSubmit');
+            if (loginSubmit) {
+                loginSubmit.addEventListener('click', function (e) {
                     e.preventDefault();
                     doLogin();
                 });
             }
+
             if (adminLogout) {
-                adminLogout.addEventListener('click', function () {
-                    setAuth(false);
-                    showScreen();
+                adminLogout.addEventListener('click', async function () {
+                    await api('../api/logout.php', { method: 'POST' });
+                    await showScreen();
                 });
-            }
-
-            function getRequests() {
-                try {
-                    var raw = localStorage.getItem(STORAGE_REQUESTS);
-                    var list = raw ? JSON.parse(raw) : [];
-                    return Array.isArray(list) ? list : [];
-                } catch (_) {
-                    return [];
-                }
-            }
-
-            function saveRequests(list) {
-                try {
-                    localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(list));
-                } catch (_) {}
             }
 
             function formatDate(iso) {
@@ -183,31 +168,40 @@
                 return div.innerHTML;
             }
 
-            function markProcessed(id) {
-                var list = getRequests();
-                var idx = list.findIndex(function (r) { return r.id === id; });
-                if (idx === -1) return;
-                list[idx].processed = true;
-                saveRequests(list);
-                renderContactTab();
+            async function getRequests() {
+                var result = await api('../api/requests.php', { method: 'GET' });
+                if (!result.ok || !result.data || !Array.isArray(result.data.requests)) {
+                    return [];
+                }
+                return result.data.requests;
             }
 
-            function renderContactTab() {
-                if (!contactList || !contactEmpty) return;
-                var list = getRequests().filter(function (r) { return r.type === 'contact'; });
-                list.sort(function (a, b) {
-                    return (b.createdAt || '').toString().localeCompare((a.createdAt || '').toString());
+            async function markProcessed(id) {
+                await api('../api/mark-processed.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id })
                 });
+                await renderContactTab();
+            }
+
+            async function renderContactTab() {
+                if (!contactList || !contactEmpty) return;
+                var requests = await getRequests();
+                var list = requests;
+
                 if (list.length === 0) {
                     contactList.innerHTML = '';
                     contactEmpty.style.display = 'block';
                     return;
                 }
+
                 contactEmpty.style.display = 'none';
                 contactList.innerHTML = list.map(function (r) {
                     var dateStr = formatDate(r.createdAt);
                     var processed = r.processed === true;
                     var body = [
+                        '<p><strong>Typ:</strong> ' + escapeHtml(r.type || 'contact') + '</p>',
                         r.name && '<p><strong>Name:</strong> ' + escapeHtml(r.name) + '</p>',
                         r.email && '<p><strong>E-Mail:</strong> <a href="mailto:' + escapeHtml(r.email) + '">' + escapeHtml(r.email) + '</a></p>',
                         r.phone && '<p><strong>Telefon:</strong> <a href="tel:' + escapeHtml(r.phone) + '">' + escapeHtml(r.phone) + '</a></p>',
@@ -222,6 +216,7 @@
                         '<span class="admin-request-date">' + escapeHtml(dateStr) + '</span>' + doneBtn +
                         '</div><div class="admin-request-body">' + body + '</div></div>';
                 }).join('');
+
                 contactList.querySelectorAll('.admin-request-mark-done').forEach(function (btn) {
                     btn.addEventListener('click', function () { markProcessed(btn.getAttribute('data-id')); });
                 });
