@@ -1,3 +1,7 @@
+# Publishes static files to GitHub Pages. PHP API does not execute there.
+# For admin/API on IONOS, configure ADMIN_LOGIN + ADMIN_PASSWORD (hosting env or api/env.local.php).
+# Store credentials as GitHub Actions secrets if your deploy pipeline generates env.local.php (see IONOS_DEPLOY.md).
+
 name: Deploy to GitHub Pages
 
 on:

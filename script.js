@@ -44,8 +44,7 @@ document.addEventListener('click', (e) => {
     });
 });
 
-// Contact Form — speichert Anfragen in Supabase oder localStorage
-const STORAGE_REQUESTS = 'admin_requests';
+// Contact Form -> PHP API
 const contactForm = document.getElementById('contactForm');
 
 const CALENDAR_SELECTION_KEY = 'calendar_selection';
@@ -82,8 +81,13 @@ function getCalendarSelection() {
     return null;
 }
 
-function getSupabase() {
-    return window.supabase || null;
+async function saveRequestToApi(payload) {
+    const response = await fetch('api/requests.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    return response.ok;
 }
 
 if (contactForm) {
@@ -104,45 +108,21 @@ if (contactForm) {
         };
 
         let saved = false;
-        const sb = getSupabase();
-        if (sb) {
-            try {
-                await sb.from('requests').insert({
-                    type: 'contact',
-                    name: data.name,
-                    email: data.email,
-                    phone: data.phone,
-                    message: data.message,
-                    date: data.date,
-                    slots: data.slots,
-                    formattedDate: data.formattedDate,
-                    slotsText: data.slotsText
-                });
-                saved = true;
-            } catch (_) {}
-        } else {
-            try {
-                const raw = localStorage.getItem(STORAGE_REQUESTS);
-                const list = raw ? JSON.parse(raw) : [];
-                if (!Array.isArray(list)) list = [];
-                list.push({
-                    id: 'req-' + Date.now(),
-                    type: 'contact',
-                    name: data.name,
-                    email: data.email,
-                    phone: data.phone,
-                    message: data.message,
-                    date: data.date,
-                    slots: data.slots,
-                    formattedDate: data.formattedDate,
-                    slotsText: data.slotsText,
-                    createdAt: new Date().toISOString(),
-                    processed: false
-                });
-                localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(list));
-                saved = true;
-            } catch (_) {}
-        }
+        try {
+            saved = await saveRequestToApi({
+                type: 'contact',
+                id: 'req-' + Date.now(),
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                message: data.message,
+                date: data.date,
+                slots: data.slots,
+                formattedDate: data.formattedDate,
+                slotsText: data.slotsText,
+                createdAt: new Date().toISOString()
+            });
+        } catch (_) {}
 
         if (saved) {
             try { sessionStorage.removeItem(CALENDAR_SELECTION_KEY); } catch (_) {}

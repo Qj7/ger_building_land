@@ -1,6 +1,15 @@
 // Calendar functionality
 const TIME_SLOTS = ['7-11', '11-15', '15-19'];
 
+async function saveCalendarRequestToApi(payload) {
+    const response = await fetch('api/requests.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    return response.ok;
+}
+
 class Calendar {
     constructor() {
         this.currentDate = new Date();
@@ -252,7 +261,7 @@ class Calendar {
         }
     }
 
-    confirmAppointment() {
+    async confirmAppointment() {
         if (!this.selectedDate || this.selectedSlots.size === 0) return;
 
         const dateKey = this.formatDateKey(this.selectedDate);
@@ -274,23 +283,17 @@ class Calendar {
             }));
         } catch (_) {}
 
-        // Speichern für Admin (Terminbuchungen)
-        const STORAGE_REQUESTS = 'admin_requests';
+        // Speichern für Admin (Terminbuchungen) über PHP API
         try {
-            const raw = localStorage.getItem(STORAGE_REQUESTS);
-            const list = raw ? JSON.parse(raw) : [];
-            if (!Array.isArray(list)) list = [];
-            list.push({
+            await saveCalendarRequestToApi({
                 id: 'cal-' + Date.now(),
                 type: 'calendar',
                 date: dateKey,
                 slots: slotsArray,
                 formattedDate: formattedDate,
                 slotsText: slotsText,
-                createdAt: new Date().toISOString(),
-                processed: false
+                createdAt: new Date().toISOString()
             });
-            localStorage.setItem(STORAGE_REQUESTS, JSON.stringify(list));
         } catch (_) {}
 
         // Переход на контакт: query-параметры в URL, чтобы index.html их прочитал

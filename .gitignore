@@ -6,3 +6,4 @@ msp_source/
 
 # Admin credentials — never commit (see SICHERHEIT.md)
 admin-config.local.js
+api/env.local.php
